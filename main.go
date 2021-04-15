@@ -14,6 +14,11 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+var (
+	GitCommit string
+	Version   string
+)
+
 func main() {
 	var port int
 	var validUpstream string
@@ -27,6 +32,7 @@ func main() {
 		os.Exit(1)
 		return
 	}
+	log.Printf("Version: %s\tCommit: %s", Version, GitCommit)
 
 	log.Printf("Listening on %d, allowed upstream: %s", port, validUpstream)
 

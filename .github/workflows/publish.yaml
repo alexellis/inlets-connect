@@ -35,8 +35,8 @@ jobs:
           outputs: "type=registry,push=true"
           platforms: linux/amd64,linux/arm/v6,linux/arm64
           build-args: |
-            Version=${{ steps.get_tag.outputs.TAG }}
-            GitCommit=${{ github.sha }}
+            VERSION=${{ steps.get_tag.outputs.TAG }}
+            GIT_COMMIT=${{ github.sha }}
           tags: |
             ghcr.io/${{ steps.get_repo_owner.outputs.repo_owner }}/inlets-connect:${{ github.sha }}
             ghcr.io/${{ steps.get_repo_owner.outputs.repo_owner }}/inlets-connect:${{ steps.get_tag.outputs.TAG }}

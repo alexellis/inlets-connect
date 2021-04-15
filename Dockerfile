@@ -18,7 +18,7 @@ COPY go.mod .
 
 # add user in this stage because it cannot be done in next stage which is built from scratch
 # in next stage we'll copy user and group information from this stage
-RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} CGO_ENABLED=0 go build -ldflags "-s -w" -a -installsuffix cgo -o /usr/bin/connect \
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} CGO_ENABLED=0 go build -ldflags "-s -w -X main.GitCommit=${GIT_COMMIT} -X main.Version=${VERSION}" -a -installsuffix cgo -o /usr/bin/connect \
     && addgroup -S app \
     && adduser -S -g app app
 
