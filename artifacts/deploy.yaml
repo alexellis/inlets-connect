@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: inlets
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inlets-connect
+  namespace: inlets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inlets-connect
+  template:
+    metadata:
+      labels:
+        app: inlets-connect
+    spec:
+      containers:
+      - name: inlets-connect
+        image: ghcr.io/alexellis/inlets-connect
+        imagePullPolicy: Always
+        command: ["/usr/bin/connect"]
+        args:
+        - "--port=3128"
+        - "--upstream=kubernetes.default.svc:443"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inlets-connect
+  namespace: inlets
+  labels:
+    app: inlets-connect
+spec:
+  type: ClusterIP
+  ports:
+    - name: inlets-connect
+      port: 3128
+      protocol: TCP
+      targetPort: 3128
+  selector:
+    app: inlets-connect

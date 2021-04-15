@@ -1,0 +1,43 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Get Repo Owner
+        id: get_repo_owner
+        run: echo ::set-output name=repo_owner::$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
+      - name: Get TAG
+        id: get_tag
+        run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to Docker Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ steps.get_repo_owner.outputs.repo_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+      - name: Release build
+        id: release_build
+        uses: docker/build-push-action@v2
+        with:
+          outputs: "type=registry,push=true"
+          platforms: linux/amd64,linux/arm/v6,linux/arm64
+          build-args: |
+            Version=${{ steps.get_tag.outputs.TAG }}
+            GitCommit=${{ github.sha }}
+          tags: |
+            ghcr.io/${{ steps.get_repo_owner.outputs.repo_owner }}/inlets-connect:${{ github.sha }}
+            ghcr.io/${{ steps.get_repo_owner.outputs.repo_owner }}/inlets-connect:${{ steps.get_tag.outputs.TAG }}
+            ghcr.io/${{ steps.get_repo_owner.outputs.repo_owner }}/inlets-connect:latest

@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inlets-client
+  namespace: inlets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inlets-client
+  template:
+    metadata:
+      labels:
+        app: inlets-client
+    spec:
+      containers:
+      - name: inlets-client
+        image: ghcr.io/inlets/inlets-pro:0.8.3
+        imagePullPolicy: IfNotPresent
+        command: ["inlets-pro"]
+        args:
+        - "tcp"
+        - "client"
+        - "--url=wss://192.168.0.26:8123"
+        - "--ports=3128"
+        - "--token="
+        - "--license="
+        - "--upstream=inlets-connect"
+---

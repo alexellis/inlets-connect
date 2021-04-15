@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: inlets
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inlets-server
+  namespace: inlets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inlets-server
+  template:
+    metadata:
+      labels:
+        app: inlets-server
+    spec:
+      containers:
+      - name: inlets-server
+        image: ghcr.io/inlets/inlets-pro:0.8.3
+        imagePullPolicy: IfNotPresent
+        command: ["inlets-pro"]
+        args:
+        - "server"
+        - "--auto-tls=true"
+        - "--auto-tls-san=192.168.0.26"
+        - "--token="
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inlets-server
+  namespace: inlets
+  labels:
+    app: inlets-server
+spec:
+  type: LoadBalancer
+  ports:
+    - name: inlets-control
+      port: 8123
+      protocol: TCP
+      targetPort: 8123
+      nodePort: 30000
+    - name: inlets-connect
+      port: 3128
+      protocol: TCP
+      targetPort: 3128
+      nodePort: 30001
+  selector:
+    app: inlets-server
