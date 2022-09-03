@@ -24,6 +24,20 @@ This example allows the proxy running on `127.0.0.1:3128` to accept a CONNECT re
 
 From within Kubernetes, the `--upstream` is likely to be `kubernetes.default.svc` and the proxy is likely to be run in a Pod.
 
+### Usage from within a KUBECONFIG
+
+Set the `server` as the upstream and the `proxy-url` as the endpoint for kubectl to talk to inlets-connect itself.
+
+```yaml
+- cluster:
+    certificate-authority-data: ...
+    server: https://kubernetes.svc.default:443
+    proxy-url: http://127.0.0.1:3128
+  name: openshift-regulated-customer
+```
+
+Then use kubectl / helm / arkade as per usual.
+
 ### Within Docker
 
 Run the proxy with an allowed upstream of `kubernetes:443`
