@@ -32,7 +32,7 @@ func main() {
 		os.Exit(1)
 		return
 	}
-	log.Printf("Version: %s\tCommit: %s", Version, GitCommit)
+	log.Printf("inlets-connect by Alex Ellis\n\nVersion: %s\tCommit: %s", Version, GitCommit)
 
 	log.Printf("Listening on %d, allowed upstream: %s", port, validUpstream)
 
