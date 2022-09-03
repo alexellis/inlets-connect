@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: inlets-connect
+  namespace: inlets
+  labels:
+    app: inlets-connect
+spec:
+  type: ClusterIP
+  ports:
+    - name: inlets-connect
+      port: 3128
+      protocol: TCP
+      targetPort: 3128
+  selector:
+    app: inlets-connect

@@ -1,5 +1,5 @@
 module github.com/inlets/connect
 
-go 1.15
+go 1.18
 
-require golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+require golang.org/x/sync v0.0.0-20220819030929-7fc1605a5dde
