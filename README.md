@@ -13,7 +13,7 @@ For usage on Kubernetes, see: [artifacts](/artifacts)
 ### Local
 
 ```bash
-go build && ./inlets-connect --upstream 192.168.0.15:443 --port 3128
+go build && ./inlets-connect -upstream 192.168.0.15:443 -port 3128
 
 curl https://192.168.0.15 -x http://127.0.0.1:3128
 ```

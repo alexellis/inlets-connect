@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -8,7 +9,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"golang.org/x/sync/errgroup"
@@ -92,7 +92,7 @@ func pipe(from net.Conn, to net.Conn) error {
 	defer from.Close()
 	n, err := io.Copy(from, to)
 	log.Printf("Wrote: %d bytes", n)
-	if err != nil && strings.Contains(err.Error(), "closed network") {
+	if errors.Is(err, net.ErrClosed) {
 		return nil
 	}
 	return err
