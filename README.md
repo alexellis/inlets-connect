@@ -1,8 +1,10 @@
-# inlets-connect
+# inlets-connect - a tiny HTTP CONNECT proxy 🚦
 
-inlets-connect is a proxy that supports HTTPS and the CONNECT method. It can be deployed as a side-car or stand-alone to proxy to a single address using TCP pass-through.
+inlets-connect is a proxy that supports the HTTP CONNECT method to initiate a TCP connection over HTTP. It can be deployed as a stand-alone binary, a container, or as a side-car.
 
-The use-case is for TLS pass-through for a HTTPS service via an inlets Pro tunnel. With this technique, the `kubernetes.default.svc` address can be used with a valid TLS SAN name, when forwarded into a remote cluster via inlets PRO.
+It's designed to allow access to a single, predefined address using TCP pass-through, without any decryption or MITM.
+
+The reason inlets-connect was made was to make it easier to proxy the Kubernetes API server through inlets Pro TCP tunnels, where the TLS SAN name of the API server is fixed to `kubernetes.default.svc` for instance. This tool means that the API server can be accessed remotely from kubectl, ArgoCD and other tooling without resorting to *TLS Insecure Verify*, which is an anti-pattern.
 
 ## Usage
 
