@@ -46,7 +46,7 @@ Run the proxy with an allowed upstream of `kubernetes:443`
 
 ```bash
 $ docker run -p 3128:3128 \
-    -ti ghcr.io/alexellis/inlets-connect:0.0.2 -port 3128 -upstream ghost:443
+    -ti ghcr.io/alexellis/inlets-connect:latest -port 3128 -upstream ghost:443
 
 2021/04/15 10:48:49 Version: 0.0.2      Commit: 3ec88704b162263511b46f33ee23f1c72f773d56
 2021/04/15 10:48:49 Listening on 3128, allowed upstream: ghost:443
