@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io"
@@ -10,8 +11,6 @@ import (
 	"os"
 	"strings"
 	"time"
-
-	"golang.org/x/sync/errgroup"
 )
 
 var (
@@ -28,7 +27,7 @@ func main() {
 	flag.Parse()
 
 	if len(validUpstream) == 0 {
-		fmt.Fprintf(os.Stderr, "--upstream is required")
+		fmt.Fprintf(os.Stderr, "--upstream is required\n")
 		os.Exit(1)
 		return
 	}
@@ -72,17 +71,17 @@ func main() {
 		defer reqConn.Close()
 		defer wbuf.Flush()
 
-		g := new(errgroup.Group)
-		g.Go(func() error {
-			return pipe(reqConn, conn)
-		})
-		g.Go(func() error {
-			return pipe(conn, reqConn)
-		})
+		ctx, cancel := context.WithCancel(context.Background())
+		go func() {
+			defer cancel()
+			pipe(reqConn, conn)
+		}()
+		go func() {
+			defer cancel()
+			pipe(conn, reqConn)
+		}()
 
-		if err := g.Wait(); err != nil {
-			log.Println("Error", err.Error())
-		}
+		<-ctx.Done()
 
 		log.Printf("Connection %s done.", conn.RemoteAddr())
 	}))
