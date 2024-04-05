@@ -31,6 +31,13 @@ func main() {
 		os.Exit(1)
 		return
 	}
+
+	if strings.Contains(validUpstream, "http://") || strings.Contains(validUpstream, "https://") {
+		fmt.Fprintf(os.Stderr, "--upstream should be HOST:PORT only\n")
+		os.Exit(1)
+		return
+	}
+
 	log.Printf("inlets-connect by Alex Ellis\n\nVersion: %s\tCommit: %s", Version, GitCommit)
 
 	log.Printf("Listening on %d, allowed upstream: %s", port, validUpstream)
@@ -44,7 +51,8 @@ func main() {
 		defer r.Body.Close()
 
 		if r.Host != validUpstream {
-			http.Error(w, fmt.Sprintf("Unauthorized request to %s", r.Host), http.StatusUnauthorized)
+			log.Printf("Unauthorized request to: %s, should be: %s", r.Host, validUpstream)
+			http.Error(w, fmt.Sprintf("Unauthorized request to: %s", r.Host), http.StatusUnauthorized)
 			return
 		}
 
